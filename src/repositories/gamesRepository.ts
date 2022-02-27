@@ -1,0 +1,22 @@
+import connection from '../database/connection';
+import { Game } from '../interfaces/interfaces';
+
+export async function insert(game: Game): Promise<Boolean> {
+  const { name, image, stockTotal, categoryId, pricePerDay } = game;
+
+  const result = await connection.query(
+    `INSERT INTO games (name, image, "stockTotal", "categoryId", "pricePerDay")
+     VALUES ($1, $2, $3, $4, $5)`,
+    [name, image, stockTotal, categoryId, pricePerDay],
+  );
+  if (!result.rowCount) return false;
+  return true;
+}
+export async function findByName(name: string): Promise<Game | null> {
+  const result = await connection.query(
+    'SELECT * FROM games WHERE name = $1 LIMIT 1',
+    [name],
+  );
+  if (!result.rowCount) return null;
+  return result.rows[0];
+}
