@@ -1,16 +1,9 @@
-class NoContent implements Error {
+export default class NoContent extends Error {
   status: number;
 
-  name: string;
-
-  message: string;
-
-  stack?: string;
-
   constructor() {
-    this.message = 'No Content';
+    super();
     this.status = 204;
+    Object.setPrototypeOf(this, NoContent.prototype);
   }
 }
-
-export default NoContent;

@@ -6,3 +6,21 @@ export async function list(): Promise<Array<Category> | null> {
   if (!result.rowCount) return null;
   return result.rows;
 }
+
+export async function findByName(name: string): Promise<Category | null> {
+  const result = await connection.query(
+    'SELECT * FROM categories WHERE name = $1 LIMIT 1',
+    [name],
+  );
+  if (!result.rowCount) return null;
+  return result.rows[0];
+}
+
+export async function insert(name: string): Promise<Boolean> {
+  const result = await connection.query(
+    'INSERT INTO categories (name) VALUES ($1)',
+    [name],
+  );
+  if (!result.rowCount) return false;
+  return true;
+}
