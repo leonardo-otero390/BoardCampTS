@@ -20,10 +20,12 @@ export async function insert(req: Request, res: Response) {
   }
 }
 export async function list(req: Request, res: Response) {
+  const gameName = req.query.name.toString();
   try {
-    const games = await gamesService.list();
+    const games = await gamesService.list(gameName);
     return res.send(games);
   } catch (error) {
+    console.log(error.message);
     if (error instanceof NoContent) return res.status(error.status).send([]);
     return res.sendStatus(500);
   }

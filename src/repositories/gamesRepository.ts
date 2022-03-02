@@ -21,8 +21,24 @@ export async function findByName(name: string): Promise<Game | null> {
   return result.rows[0];
 }
 export async function list(): Promise<Array<Game> | null> {
-  const result = await connection.query(`SELECT games.*,categories.name AS "categoryName" FROM games 
+  const result =
+    await connection.query(`SELECT games.*,categories.name AS "categoryName" FROM games 
   JOIN categories ON games."categoryId"=categories.id;`);
+  if (!result.rowCount) return null;
+  return result.rows;
+}
+export async function listWithQueryName(
+  name: string,
+): Promise<Array<Game> | null> {
+  const queryName = `${name.toLowerCase()}%`;
+  const result = await connection.query(
+    `
+    SELECT games.*,categories.name AS "categoryName" FROM games 
+    JOIN categories ON games."categoryId"=categories.id
+    WHERE LOWER(games.name) LIKE $1
+  ;`,
+    [queryName],
+  );
   if (!result.rowCount) return null;
   return result.rows;
 }

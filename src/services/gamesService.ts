@@ -19,8 +19,13 @@ export async function insert(game: Game): Promise<Boolean | Error> {
   return true;
 }
 
-export async function list(): Promise<Array<Game> | Error> {
-  const games = await gamesRepository.list();
+export async function list(name?: string): Promise<Array<Game> | Error> {
+  let games;
+  if (name.length) {
+    games = await gamesRepository.listWithQueryName(name);
+  } else {
+    games = await gamesRepository.list();
+  }
   if (!games || !games?.length) throw new NoContent();
   return games;
 }
