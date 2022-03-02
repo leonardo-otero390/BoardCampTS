@@ -9,4 +9,5 @@ export interface Game {
   stockTotal: number;
   categoryId: number;
   pricePerDay: number;
+  categoryName?: string;
 }

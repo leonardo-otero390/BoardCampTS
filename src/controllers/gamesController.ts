@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import * as gamesService from '../services/gamesService';
 import Conflict from '../errors/ConflictError';
+import NoContent from '../errors/NoContentError';
+import NotFound from '../errors/NotFoundError';
 
 export async function insert(req: Request, res: Response) {
   const { game } = res.locals;
@@ -11,6 +13,18 @@ export async function insert(req: Request, res: Response) {
     if (error instanceof Conflict) {
       return res.status(error.status).send(error.message);
     }
+    if (error instanceof NotFound) {
+      return res.status(error.status).send(error.message);
+    }
+    return res.sendStatus(500);
+  }
+}
+export async function list(req: Request, res: Response) {
+  try {
+    const games = await gamesService.list();
+    return res.send(games);
+  } catch (error) {
+    if (error instanceof NoContent) return res.status(error.status).send([]);
     return res.sendStatus(500);
   }
 }
