@@ -21,9 +21,9 @@ export async function findByName(name: string): Promise<Game | null> {
   return result.rows[0];
 }
 export async function list(): Promise<Array<Game> | null> {
-  const result =
-    await connection.query(`SELECT games.*,categories.name AS "categoryName" FROM games 
-  JOIN categories ON games."categoryId"=categories.id;`);
+  const result = await connection.query(`
+    SELECT games.*,categories.name AS "categoryName" FROM games 
+    JOIN categories ON games."categoryId"=categories.id;`);
   if (!result.rowCount) return null;
   return result.rows;
 }
