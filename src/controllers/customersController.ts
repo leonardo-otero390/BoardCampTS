@@ -28,7 +28,6 @@ export async function list(req: Request, res: Response) {
     const customers = await customersService.list(cpfString);
     return res.send(customers);
   } catch (error) {
-    console.log(error.message);
     if (error instanceof NoContent) return res.status(error.status).send([]);
     return res.sendStatus(500);
   }
