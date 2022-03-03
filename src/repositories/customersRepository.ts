@@ -27,6 +27,7 @@ export async function list(): Promise<Array<Customer> | null> {
   if (!result.rowCount) return null;
   return result.rows;
 }
+
 export async function listWithcpf(
   cpf: string,
 ): Promise<Array<Customer> | null> {
@@ -38,4 +39,14 @@ export async function listWithcpf(
   );
   if (!result.rowCount) return null;
   return result.rows;
+}
+
+export async function findById(id: number): Promise<Customer | null> {
+  const result = await connection.query(
+    `
+  SELECT * FROM customers WHERE id = $1 LIMIT 1;`,
+    [id],
+  );
+  if (!result.rowCount) return null;
+  return result.rows[0];
 }

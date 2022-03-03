@@ -1,0 +1,11 @@
+{
+    "files.exclude": {
+        "*.gitignore": true,
+        "**.json": true,
+        "**/.husky": true,
+        "**/dist": true,
+        "**/node_modules": true,
+        "**/tests": true,
+        "**jest.config.js": true
+    }
+}

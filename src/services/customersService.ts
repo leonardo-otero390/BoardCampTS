@@ -2,6 +2,7 @@ import * as customersRepository from '../repositories/customersRepository';
 import { Customer } from '../interfaces/interfaces';
 import Conflict from '../errors/ConflictError';
 import NoContent from '../errors/NoContentError';
+import NotFound from '../errors/NotFoundError';
 
 export async function insert(customer: Customer): Promise<Boolean | Error> {
   const cpfIsUsed = await customersRepository.findBycpf(customer.cpf);
@@ -20,4 +21,10 @@ export async function list(cpf?: string): Promise<Array<Customer> | Error> {
   }
   if (!Customers || !Customers?.length) throw new NoContent();
   return Customers;
+}
+
+export async function findById(id: number): Promise<Customer | Error> {
+  const result = await customersRepository.findById(id);
+  if (!result) throw new NotFound('Não foi encontrado nenhum cliente com esse id');
+  return result;
 }

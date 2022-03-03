@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import * as customersService from '../services/customersService';
 import Conflict from '../errors/ConflictError';
 import NoContent from '../errors/NoContentError';
+import NotFound from '../errors/NotFoundError';
 import { validatecpf } from '../validations/customersValidation';
 
 export async function insert(req: Request, res: Response) {
@@ -29,6 +30,19 @@ export async function list(req: Request, res: Response) {
     return res.send(customers);
   } catch (error) {
     if (error instanceof NoContent) return res.status(error.status).send([]);
+    return res.sendStatus(500);
+  }
+}
+export async function findById(req: Request, res: Response) {
+  const id = Number(req.params.id);
+  if (Number.isNaN(id)) return res.sendStatus(400);
+  try {
+    const customer = await customersService.findById(id);
+    return res.send(customer);
+  } catch (error) {
+    if (error instanceof NotFound) {
+      return res.status(error.status).send(error.message);
+    }
     return res.sendStatus(500);
   }
 }

@@ -10,5 +10,6 @@ routes.post(
   customersController.insert,
 );
 routes.get('/', customersController.list);
+routes.get('/:id', customersController.findById);
 
 export default routes;
