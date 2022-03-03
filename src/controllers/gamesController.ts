@@ -25,7 +25,6 @@ export async function list(req: Request, res: Response) {
     const games = await gamesService.list(gameName);
     return res.send(games);
   } catch (error) {
-    console.log(error.message);
     if (error instanceof NoContent) return res.status(error.status).send([]);
     return res.sendStatus(500);
   }

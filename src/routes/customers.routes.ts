@@ -9,5 +9,6 @@ routes.post(
   customersValidation.validateCustomer,
   customersController.insert,
 );
+routes.get('/', customersController.list);
 
 export default routes;
