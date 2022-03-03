@@ -14,12 +14,28 @@ const customerSchema = joi.object({
   birthday: joi.date().max('now').required(),
 });
 
+const customerUpdateSchema = joi.object({
+  name: joi.string(),
+  phone: joi.string().pattern(/^\d{10,11}$/),
+  cpf: joi.string().pattern(/^\d{11}/),
+  birthday: joi.date().max('now'),
+});
+
 export function validateCustomer(
   req: Request,
   res: Response,
   next: NextFunction,
 ) {
   const validation = customerSchema.validate(req.body);
+  if (validation.error) return res.sendStatus(400);
+  return next();
+}
+export function validateCustomerUpdate(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const validation = customerUpdateSchema.validate(req.body);
   if (validation.error) return res.sendStatus(400);
   return next();
 }

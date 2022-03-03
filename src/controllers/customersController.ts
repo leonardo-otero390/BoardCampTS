@@ -46,3 +46,21 @@ export async function findById(req: Request, res: Response) {
     return res.sendStatus(500);
   }
 }
+export async function update(req: Request, res: Response) {
+  const id = Number(req.params.id);
+  if (Number.isNaN(id)) return res.sendStatus(400);
+  try {
+    const customer = await customersService.findById(id);
+    const updated = { ...customer, ...req.body };
+    await customersService.update(updated);
+    return res.sendStatus(200);
+  } catch (error) {
+    if (error instanceof NotFound) {
+      return res.status(error.status).send(error.message);
+    }
+    if (error instanceof Conflict) {
+      return res.status(error.status).send(error.message);
+    }
+    return res.sendStatus(500);
+  }
+}

@@ -11,5 +11,10 @@ routes.post(
 );
 routes.get('/', customersController.list);
 routes.get('/:id', customersController.findById);
+routes.put(
+  '/:id',
+  customersValidation.validateCustomerUpdate,
+  customersController.update,
+);
 
 export default routes;
