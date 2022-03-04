@@ -18,3 +18,11 @@ export interface Customer {
   cpf: string;
   birthday: string;
 }
+export interface Rental {
+  id?: number;
+  customerId: number;
+  gameId: number;
+  daysRented: number;
+  rentDate?: Date;
+  originalPrice: number;
+}

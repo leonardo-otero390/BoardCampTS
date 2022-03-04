@@ -20,6 +20,14 @@ export async function findByName(name: string): Promise<Game | null> {
   if (!result.rowCount) return null;
   return result.rows[0];
 }
+export async function findById(id: number): Promise<Game | null> {
+  const result = await connection.query(
+    'SELECT * FROM games WHERE id = $1 LIMIT 1',
+    [id],
+  );
+  if (!result.rowCount) return null;
+  return result.rows[0];
+}
 export async function list(): Promise<Array<Game> | null> {
   const result = await connection.query(`
     SELECT games.*,categories.name AS "categoryName" FROM games 
