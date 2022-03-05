@@ -50,11 +50,17 @@ export async function insert(rental: Rental): Promise<Boolean | Error> {
   if (!result) throw new Error();
   return true;
 }
-async function validateGameAndCustomer(rentalFilters:RentalFilters) {
-  const game = await gamesRepository.findById(rentalFilters.gameId);
-  if (!game) throw new NotFound('Esse gameId não é válido!');
-  const customer = await customersRepository.findById(rentalFilters.customerId);
-  if (!customer) throw new NotFound('Esse customerId não é válido!');
+async function validateGameAndCustomer(rentalFilters: RentalFilters) {
+  if (rentalFilters.gameId) {
+    const game = await gamesRepository.findById(rentalFilters.gameId);
+    if (!game) throw new NotFound('Esse gameId não é válido!');
+  }
+  if (rentalFilters.customerId) {
+    const customer = await customersRepository.findById(
+      rentalFilters.customerId,
+    );
+    if (!customer) throw new NotFound('Esse customerId não é válido!');
+  }
   return true;
 }
 export async function list(filter: RentalFilters) {

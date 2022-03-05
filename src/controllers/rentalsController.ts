@@ -22,7 +22,6 @@ export async function list(req: Request, res: Response) {
     if (error instanceof NotFound) {
       return res.status(error.status).send(error.message);
     }
-    console.error(error.message);
     return res.sendStatus(500);
   }
 }
