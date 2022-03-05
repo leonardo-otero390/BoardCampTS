@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime.js';
 import * as rentalsRepository from '../repositories/rentalsRepository';
 import * as customersRepository from '../repositories/customersRepository';
 import * as gamesRepository from '../repositories/gamesRepository';
@@ -7,6 +9,7 @@ import {
   RentalGameCustomer,
 } from '../interfaces/interfaces';
 import NotFound from '../errors/NotFoundError';
+import BadRequest from '../errors/BadRequestError';
 import NoContent from '../errors/NoContentError';
 
 function buildRentalObject(rental: RentalGameCustomer) {
@@ -69,4 +72,25 @@ export async function list(filter: RentalFilters) {
   if (!rentals) throw new NoContent();
   const result = rentals.map(buildRentalObject);
   return result;
+}
+export async function finish(id: number): Promise<Boolean | Error> {
+  const rental = await rentalsRepository.findById(id);
+
+  if (!rental) throw new NotFound('Esse id de aluguel não é válido!');
+  if (rental.returnDate) throw new BadRequest('Eita esse ja tá finalizado');
+  const { rentDate, originalPrice, daysRented } = rental;
+  const returnDate = dayjs().format('YYYY-MM-DD');
+  dayjs.extend(relativeTime);
+  let daysPassed: any = dayjs(returnDate).from(rentDate, true);
+  if (daysPassed === 'a day') {
+    daysPassed = 1;
+  } else {
+    daysPassed = daysPassed.match(/[0-9]{0,2}/);
+  }
+  const pricePerDay = originalPrice / daysRented;
+  let delayFee = (daysPassed - daysRented) * pricePerDay;
+  if (delayFee <= 0) delayFee = null;
+  const result = await rentalsRepository.finish(delayFee, id);
+  if (!result) throw new Error();
+  return true;
 }

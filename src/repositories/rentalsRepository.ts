@@ -62,3 +62,22 @@ export async function listWithCustomerAndGame(
   if (!result.rowCount) return false;
   return result.rows;
 }
+export async function findById(id: number): Promise<Rental | false> {
+  const result = await connection.query('SELECT * FROM rentals WHERE id=$1;', [
+    id,
+  ]);
+  if (!result.rowCount) return false;
+  return result.rows[0];
+}
+export async function finish(delayFee: number, id: number) {
+  const result = await connection.query(
+    `
+  UPDATE rentals
+  SET "returnDate" = NOW() , "delayFee" = $1
+  WHERE id = $2
+  `,
+    [delayFee, id],
+  );
+  if (!result.rowCount) return false;
+  return result.rows;
+}

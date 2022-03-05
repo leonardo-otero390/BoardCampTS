@@ -24,6 +24,7 @@ export interface Rental {
   gameId: number;
   daysRented: number;
   rentDate?: Date;
+  returnDate?: Date;
   originalPrice: number;
 }
 export interface RentalGameCustomer extends Rental, Game, Customer, Category {
