@@ -33,7 +33,22 @@ export async function finish(req: Request, res: Response) {
     await rentalsService.finish(id);
     return res.sendStatus(200);
   } catch (error) {
-    console.error(error.message);
+    if (error instanceof NotFound) {
+      return res.status(error.status).send(error.message);
+    }
+    if (error instanceof BadRequest) {
+      return res.status(error.status).send(error.message);
+    }
+    return res.sendStatus(500);
+  }
+}
+export async function remove(req: Request, res: Response) {
+  const id = Number(req.params.id);
+  if (Number.isNaN(id)) return res.sendStatus(400);
+  try {
+    await rentalsService.remove(id);
+    return res.sendStatus(200);
+  } catch (error) {
     if (error instanceof NotFound) {
       return res.status(error.status).send(error.message);
     }

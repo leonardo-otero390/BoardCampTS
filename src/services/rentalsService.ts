@@ -75,7 +75,6 @@ export async function list(filter: RentalFilters) {
 }
 export async function finish(id: number): Promise<Boolean | Error> {
   const rental = await rentalsRepository.findById(id);
-
   if (!rental) throw new NotFound('Esse id de aluguel não é válido!');
   if (rental.returnDate) throw new BadRequest('Eita esse ja tá finalizado');
   const { rentDate, originalPrice, daysRented } = rental;
@@ -92,5 +91,12 @@ export async function finish(id: number): Promise<Boolean | Error> {
   if (delayFee <= 0) delayFee = null;
   const result = await rentalsRepository.finish(delayFee, id);
   if (!result) throw new Error();
+  return true;
+}
+export async function remove(id: number): Promise<boolean> {
+  const rental = await rentalsRepository.findById(id);
+  if (!rental) throw new NotFound('Esse id de aluguel não é válido!');
+  if (rental.returnDate) throw new BadRequest('Eita esse ja tá finalizado');
+  await rentalsRepository.remove(id);
   return true;
 }

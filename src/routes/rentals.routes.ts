@@ -7,5 +7,6 @@ const routes = Router();
 routes.post('/', rentalsValidation.validateNewRental, rentalsController.insert);
 routes.get('/', rentalsValidation.validateParams, rentalsController.list);
 routes.post('/:id/return', rentalsController.finish);
+routes.delete('/:id', rentalsController.remove);
 
 export default routes;

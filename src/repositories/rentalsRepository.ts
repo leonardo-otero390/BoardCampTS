@@ -81,3 +81,13 @@ export async function finish(delayFee: number, id: number) {
   if (!result.rowCount) return false;
   return result.rows;
 }
+export async function remove(id: number): Promise<Boolean> {
+  const result = await connection.query(
+    `
+  DELETE FROM rentals WHERE id = $1
+  `,
+    [id],
+  );
+  if (!result.rowCount) return false;
+  return true;
+}
