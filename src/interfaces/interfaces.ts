@@ -1,5 +1,5 @@
 export interface Category {
-  id: number;
+  id?: number;
   name: string;
 }
 export interface Game {
@@ -25,4 +25,8 @@ export interface Rental {
   daysRented: number;
   rentDate?: Date;
   originalPrice: number;
+}
+export interface RentalGameCustomer extends Rental, Game, Customer, Category {
+  customerName: string;
+  gameName: string;
 }
