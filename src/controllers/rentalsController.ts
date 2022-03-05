@@ -14,11 +14,15 @@ export async function insert(req: Request, res: Response) {
   }
 }
 export async function list(req: Request, res: Response) {
+  const { filter } = res.locals;
   try {
-    const rentals = await rentalsService.list();
-    res.send(rentals);
+    const rentals = await rentalsService.list(filter);
+    return res.send(rentals);
   } catch (error) {
-    console.log(error.message);
-    res.sendStatus(500);
+    if (error instanceof NotFound) {
+      return res.status(error.status).send(error.message);
+    }
+    console.error(error.message);
+    return res.sendStatus(500);
   }
 }

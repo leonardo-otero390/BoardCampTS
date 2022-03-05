@@ -30,3 +30,7 @@ export interface RentalGameCustomer extends Rental, Game, Customer, Category {
   customerName: string;
   gameName: string;
 }
+export interface RentalFilters {
+  customerId?: number;
+  gameId?: number;
+}

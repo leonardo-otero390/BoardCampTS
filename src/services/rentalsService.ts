@@ -1,7 +1,11 @@
 import * as rentalsRepository from '../repositories/rentalsRepository';
 import * as customersRepository from '../repositories/customersRepository';
 import * as gamesRepository from '../repositories/gamesRepository';
-import { Rental, RentalGameCustomer } from '../interfaces/interfaces';
+import {
+  Rental,
+  RentalFilters,
+  RentalGameCustomer,
+} from '../interfaces/interfaces';
 import NotFound from '../errors/NotFoundError';
 import NoContent from '../errors/NoContentError';
 
@@ -46,8 +50,16 @@ export async function insert(rental: Rental): Promise<Boolean | Error> {
   if (!result) throw new Error();
   return true;
 }
-export async function list() {
-  const rentals = await rentalsRepository.listWithCustomerAndGame();
+async function validateGameAndCustomer(rentalFilters:RentalFilters) {
+  const game = await gamesRepository.findById(rentalFilters.gameId);
+  if (!game) throw new NotFound('Esse gameId não é válido!');
+  const customer = await customersRepository.findById(rentalFilters.customerId);
+  if (!customer) throw new NotFound('Esse customerId não é válido!');
+  return true;
+}
+export async function list(filter: RentalFilters) {
+  await validateGameAndCustomer(filter);
+  const rentals = await rentalsRepository.listWithCustomerAndGame(filter);
   if (!rentals) throw new NoContent();
   const result = rentals.map(buildRentalObject);
   return result;

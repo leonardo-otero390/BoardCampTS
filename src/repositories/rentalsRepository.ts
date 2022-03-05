@@ -1,5 +1,9 @@
 import connection from '../database/connection';
-import { Rental, RentalGameCustomer } from '../interfaces/interfaces';
+import {
+  Rental,
+  RentalGameCustomer,
+  RentalFilters,
+} from '../interfaces/interfaces';
 
 export async function insert(rental: Rental): Promise<Boolean> {
   const { customerId, gameId, daysRented, originalPrice } = rental;
@@ -22,9 +26,25 @@ export async function findOpenedRentalsByGameId(
   if (!result.rowCount) return [];
   return result.rows;
 }
-export async function listWithCustomerAndGame(): Promise<
-  Array<RentalGameCustomer> | false
-  > {
+export async function listWithCustomerAndGame(
+  filter: RentalFilters,
+): Promise<Array<RentalGameCustomer> | false> {
+  let customerId = '';
+  let gameId = '';
+  let operator = '';
+  let whereOperator = '';
+  if (filter.customerId || filter.gameId) {
+    whereOperator = 'WHERE';
+    if (filter.customerId) {
+      customerId = `customers.id = ${filter.customerId}`;
+    }
+    if (filter.gameId) {
+      gameId = `games.id = ${filter.gameId}`;
+    }
+    if (filter.customerId && filter.gameId) {
+      operator = 'AND';
+    }
+  }
   const result = await connection.query(
     `
   SELECT
@@ -35,7 +55,8 @@ export async function listWithCustomerAndGame(): Promise<
   FROM rentals
   JOIN customers ON customers.id = rentals."customerId"
   JOIN games ON games.id = rentals."customerId"
-  JOIN categories ON categories.id = games."categoryId";
+  JOIN categories ON categories.id = games."categoryId"
+  ${whereOperator} ${customerId} ${operator} ${gameId};
   `,
   );
   if (!result.rowCount) return false;
