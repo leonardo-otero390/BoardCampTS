@@ -1,9 +1,13 @@
-export default class NoContent extends Error {
+import HttpError from './HttpError';
+
+export default class Conflict extends HttpError {
   status: number;
 
-  constructor() {
+  message: string;
+
+  constructor(message?: string) {
     super();
     this.status = 204;
-    Object.setPrototypeOf(this, NoContent.prototype);
+    this.message = message;
   }
 }

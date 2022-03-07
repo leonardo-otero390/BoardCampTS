@@ -1,11 +1,13 @@
-export default class NotFound extends Error {
+import HttpError from './HttpError';
+
+export default class Conflict extends HttpError {
   status: number;
+
+  message: string;
 
   constructor(message?: string) {
     super();
-    this.name = 'NotFoundError';
     this.status = 404;
     this.message = message;
-    Object.setPrototypeOf(this, NotFound.prototype);
   }
 }
