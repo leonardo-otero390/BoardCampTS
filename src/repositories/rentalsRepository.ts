@@ -45,6 +45,14 @@ export async function listWithCustomerAndGame(
       operator = 'AND';
     }
   }
+  let offset = '';
+  let limit = '';
+  if (filter.offset) {
+    offset = `OFFSET ${filter.offset}`;
+  }
+  if (filter.limit) {
+    limit = `LIMIT ${filter.limit}`;
+  }
   const result = await connection.query(
     `
   SELECT
@@ -56,7 +64,9 @@ export async function listWithCustomerAndGame(
   JOIN customers ON customers.id = rentals."customerId"
   JOIN games ON games.id = rentals."customerId"
   JOIN categories ON categories.id = games."categoryId"
-  ${whereOperator} ${customerId} ${operator} ${gameId};
+  ${whereOperator} ${customerId} ${operator} ${gameId}
+  ${offset}
+    ${limit};
   `,
   );
   if (!result.rowCount) return false;

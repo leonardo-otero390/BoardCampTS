@@ -5,7 +5,9 @@ export function validateParams(
   res: Response,
   next: NextFunction,
 ) {
-  const filter = { customerId: 0, gameId: 0 };
+  const { filter } = res.locals;
+  filter.customerId = 0;
+  filter.gameId = 0;
   if (req.query.customerId) {
     filter.customerId = Number(req.query.customerId);
   }
@@ -15,6 +17,5 @@ export function validateParams(
   if (Number.isNaN(filter.customerId) || Number.isNaN(filter.gameId)) {
     return res.sendStatus(400);
   }
-  res.locals.filter = filter;
   return next();
 }
