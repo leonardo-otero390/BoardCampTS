@@ -1,25 +1,16 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import * as gamesService from '../services/gamesService';
-import Conflict from '../errors/ConflictError';
-import NoContent from '../errors/NoContentError';
-import NotFound from '../errors/NotFoundError';
 
-export async function insert(req: Request, res: Response) {
+export async function insert(req: Request, res: Response, next: NextFunction) {
   const { game } = res.locals;
   try {
     await gamesService.insert(game);
     return res.sendStatus(201);
   } catch (error) {
-    if (error instanceof Conflict) {
-      return res.status(error.status).send(error.message);
-    }
-    if (error instanceof NotFound) {
-      return res.status(error.status).send(error.message);
-    }
-    return res.sendStatus(500);
+    return next(error);
   }
 }
-export async function list(req: Request, res: Response) {
+export async function list(req: Request, res: Response, next: NextFunction) {
   const { name } = req.query;
   let nameString = '';
   if (name) nameString += name;
@@ -27,7 +18,6 @@ export async function list(req: Request, res: Response) {
     const games = await gamesService.list(nameString);
     return res.send(games);
   } catch (error) {
-    if (error instanceof NoContent) return res.status(error.status).send([]);
-    return res.sendStatus(500);
+    return next(error);
   }
 }

@@ -1,6 +1,6 @@
 import HttpError from './HttpError';
 
-export default class Conflict extends HttpError {
+export default class NotFound extends HttpError {
   status: number;
 
   message: string;
