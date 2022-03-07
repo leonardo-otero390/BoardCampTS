@@ -4,6 +4,7 @@ import { Game } from '../interfaces/games';
 import Conflict from '../errors/ConflictError';
 import NoContent from '../errors/NoContentError';
 import NotFound from '../errors/NotFoundError';
+import { RepositoriesFilters } from '../interfaces/repositoriesFilters';
 
 export async function insert(game: Game): Promise<Boolean | Error> {
   const gameAlreadyExists = await gamesRepository.findByName(game.name);
@@ -19,12 +20,15 @@ export async function insert(game: Game): Promise<Boolean | Error> {
   return true;
 }
 
-export async function list(name?: string): Promise<Array<Game> | Error> {
+export async function list(
+  filter: RepositoriesFilters,
+  name?: string,
+): Promise<Array<Game> | Error> {
   let games;
   if (name.length) {
-    games = await gamesRepository.listWithQueryName(name);
+    games = await gamesRepository.listWithQueryName(filter, name);
   } else {
-    games = await gamesRepository.list();
+    games = await gamesRepository.list(filter);
   }
   if (!games || !games?.length) throw new NoContent();
   return games;

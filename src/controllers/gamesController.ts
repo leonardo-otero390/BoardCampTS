@@ -14,8 +14,9 @@ export async function list(req: Request, res: Response, next: NextFunction) {
   const { name } = req.query;
   let nameString = '';
   if (name) nameString += name;
+  const filter = res.locals;
   try {
-    const games = await gamesService.list(nameString);
+    const games = await gamesService.list(filter, nameString);
     return res.send(games);
   } catch (error) {
     return next(error);
