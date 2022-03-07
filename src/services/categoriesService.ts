@@ -1,10 +1,13 @@
 import * as categoriesRepository from '../repositories/categoriesRepository';
 import { Category } from '../interfaces/categories';
+import { RepositoriesFilters } from '../interfaces/repositoriesFilters';
 import NoContent from '../errors/NoContentError';
 import Conflict from '../errors/ConflictError';
 
-export async function list(): Promise<Array<Category> | Error> {
-  const categories = await categoriesRepository.list();
+export async function list(
+  filter: RepositoriesFilters,
+): Promise<Array<Category> | Error> {
+  const categories = await categoriesRepository.list(filter);
   if (!categories || !categories?.length) throw new NoContent();
   return categories;
 }

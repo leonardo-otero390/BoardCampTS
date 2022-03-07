@@ -18,9 +18,9 @@ export async function list(req: Request, res: Response, next: NextFunction) {
     if (!validatecpf(cpf.toString())) return res.sendStatus(400);
     cpfString += cpf;
   }
-
+  const { filter } = res.locals;
   try {
-    const customers = await customersService.list(cpfString);
+    const customers = await customersService.list(filter, cpfString);
     return res.send(customers);
   } catch (error) {
     return next(error);

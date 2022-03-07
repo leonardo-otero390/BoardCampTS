@@ -3,6 +3,7 @@ import { Customer } from '../interfaces/customers';
 import Conflict from '../errors/ConflictError';
 import NoContent from '../errors/NoContentError';
 import NotFound from '../errors/NotFoundError';
+import { RepositoriesFilters } from '../interfaces/repositoriesFilters';
 
 export async function insert(customer: Customer): Promise<Boolean | Error> {
   const cpfIsUsed = await customersRepository.findBycpf(customer.cpf);
@@ -23,12 +24,15 @@ export async function update(customer: Customer): Promise<Boolean | Error> {
   if (!result) throw new Error();
   return true;
 }
-export async function list(cpf?: string): Promise<Array<Customer> | Error> {
+export async function list(
+  filter: RepositoriesFilters,
+  cpf?: string,
+): Promise<Array<Customer> | Error> {
   let Customers;
   if (cpf.length) {
-    Customers = await customersRepository.listWithcpf(cpf);
+    Customers = await customersRepository.listWithcpf(filter, cpf);
   } else {
-    Customers = await customersRepository.list();
+    Customers = await customersRepository.list(filter);
   }
   if (!Customers || !Customers?.length) throw new NoContent();
   return Customers;

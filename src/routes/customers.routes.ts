@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as customersController from '../controllers/customersController';
+import validateFilters from '../middlewares/validateFilters';
 import validateSchema from '../middlewares/validateSchema';
 import * as customersSchemas from '../schemas/customerSchemas';
 
@@ -10,7 +11,7 @@ routes.post(
   validateSchema(customersSchemas.customer),
   customersController.insert,
 );
-routes.get('/', customersController.list);
+routes.get('/', validateFilters, customersController.list);
 routes.get('/:id', customersController.findById);
 routes.put(
   '/:id',

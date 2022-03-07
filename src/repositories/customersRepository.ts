@@ -1,5 +1,6 @@
 import connection from '../database/connection';
 import { Customer } from '../interfaces/customers';
+import { RepositoriesFilters } from '../interfaces/repositoriesFilters';
 
 export async function insert(customer: Customer): Promise<Boolean> {
   const { name, phone, cpf, birthday } = customer;
@@ -43,19 +44,43 @@ export async function findBycpfNotId(
   if (!result.rowCount) return null;
   return result.rows[0];
 }
-export async function list(): Promise<Array<Customer> | null> {
-  const result = await connection.query('SELECT * FROM customers;');
+export async function list(
+  filter: RepositoriesFilters,
+): Promise<Array<Customer> | null> {
+  let offset = '';
+  let limit = '';
+  if (filter.offset) {
+    offset = `OFFSET ${filter.offset}`;
+  }
+  if (filter.limit) {
+    limit = `LIMIT ${filter.limit}`;
+  }
+  const result = await connection.query(`
+  SELECT * FROM customers
+  ${offset}
+  ${limit};`);
   if (!result.rowCount) return null;
   return result.rows;
 }
 
 export async function listWithcpf(
+  filter: RepositoriesFilters,
   cpf: string,
 ): Promise<Array<Customer> | null> {
   const querycpf = `${cpf}%`;
+  let offset = '';
+  let limit = '';
+  if (filter.offset) {
+    offset = `OFFSET ${filter.offset}`;
+  }
+  if (filter.limit) {
+    limit = `LIMIT ${filter.limit}`;
+  }
   const result = await connection.query(
     `
-  SELECT * FROM customers WHERE cpf LIKE $1;`,
+  SELECT * FROM customers WHERE cpf LIKE $1
+  ${offset}
+  ${limit};`,
     [querycpf],
   );
   if (!result.rowCount) return null;
