@@ -1,14 +1,11 @@
 import { Router } from 'express';
 import * as categoriesController from '../controllers/categoriesController';
-import * as categoriesValidation from '../validations/categoriesValidation';
+import validateSchema from '../middlewares/validateSchema';
+import { name } from '../schemas/categoriesSchemas';
 
 const routes = Router();
 
 routes.get('/', categoriesController.list);
-routes.post(
-  '/',
-  categoriesValidation.validateName,
-  categoriesController.insert,
-);
+routes.post('/', validateSchema(name), categoriesController.insert);
 
 export default routes;

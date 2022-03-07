@@ -1,11 +1,17 @@
 import { Router } from 'express';
 import * as rentalsController from '../controllers/rentalsController';
-import * as rentalsValidation from '../validations/rentalsValidation';
+import { validateParams } from '../middlewares/validateRentalParams';
+import validateSchema from '../middlewares/validateSchema';
+import * as rentalsSchemas from '../schemas/rentalsSchemas';
 
 const routes = Router();
 
-routes.post('/', rentalsValidation.validateNewRental, rentalsController.insert);
-routes.get('/', rentalsValidation.validateParams, rentalsController.list);
+routes.post(
+  '/',
+  validateSchema(rentalsSchemas.newRental),
+  rentalsController.insert,
+);
+routes.get('/', validateParams, rentalsController.list);
 routes.post('/:id/return', rentalsController.finish);
 routes.delete('/:id', rentalsController.remove);
 
