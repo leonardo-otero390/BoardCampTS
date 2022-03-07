@@ -1,5 +1,5 @@
 import connection from '../database/connection';
-import { Game } from '../interfaces/interfaces';
+import { Game } from '../interfaces/games';
 
 export async function insert(game: Game): Promise<Boolean> {
   const { name, image, stockTotal, categoryId, pricePerDay } = game;

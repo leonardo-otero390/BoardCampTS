@@ -7,7 +7,7 @@ import {
   Rental,
   RentalFilters,
   RentalGameCustomer,
-} from '../interfaces/interfaces';
+} from '../interfaces/rentals';
 import NotFound from '../errors/NotFoundError';
 import BadRequest from '../errors/BadRequestError';
 import NoContent from '../errors/NoContentError';

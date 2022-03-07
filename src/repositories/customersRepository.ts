@@ -1,5 +1,5 @@
 import connection from '../database/connection';
-import { Customer } from '../interfaces/interfaces';
+import { Customer } from '../interfaces/customers';
 
 export async function insert(customer: Customer): Promise<Boolean> {
   const { name, phone, cpf, birthday } = customer;

@@ -1,5 +1,5 @@
 import * as customersRepository from '../repositories/customersRepository';
-import { Customer } from '../interfaces/interfaces';
+import { Customer } from '../interfaces/customers';
 import Conflict from '../errors/ConflictError';
 import NoContent from '../errors/NoContentError';
 import NotFound from '../errors/NotFoundError';

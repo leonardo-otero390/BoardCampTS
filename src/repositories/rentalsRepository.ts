@@ -3,7 +3,7 @@ import {
   Rental,
   RentalGameCustomer,
   RentalFilters,
-} from '../interfaces/interfaces';
+} from '../interfaces/rentals';
 
 export async function insert(rental: Rental): Promise<Boolean> {
   const { customerId, gameId, daysRented, originalPrice } = rental;

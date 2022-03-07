@@ -1,5 +1,5 @@
 import * as categoriesRepository from '../repositories/categoriesRepository';
-import { Category } from '../interfaces/interfaces';
+import { Category } from '../interfaces/categories';
 import NoContent from '../errors/NoContentError';
 import Conflict from '../errors/ConflictError';
 

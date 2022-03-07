@@ -1,6 +1,6 @@
 import * as gamesRepository from '../repositories/gamesRepository';
 import * as categoriesRepository from '../repositories/categoriesRepository';
-import { Game } from '../interfaces/interfaces';
+import { Game } from '../interfaces/games';
 import Conflict from '../errors/ConflictError';
 import NoContent from '../errors/NoContentError';
 import NotFound from '../errors/NotFoundError';
